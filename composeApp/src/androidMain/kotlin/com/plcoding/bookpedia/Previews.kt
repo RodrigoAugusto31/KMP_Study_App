@@ -10,8 +10,9 @@ import com.plcoding.bookpedia.book.presentation.book_list.components.BookSearchB
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 
-@Preview
+
 @Composable
+@Preview
 private fun BookSearchBarPreview() {
     Box(
         modifier = Modifier
