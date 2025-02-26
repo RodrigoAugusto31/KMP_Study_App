@@ -12,7 +12,6 @@ import androidx.room.TypeConverters
 @TypeConverters(
     StringListTypeConverter::class
 )
-
 @ConstructedBy(BookDatabaseConstructor::class)
 abstract class FavoriteBookDatabase: RoomDatabase() {
     abstract val favoriteBookDao: FavoriteBookDao

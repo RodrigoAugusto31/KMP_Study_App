@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -70,11 +69,14 @@ fun BlurredImageBackground(
         model = imageUrl,
         onSuccess = {
             val size = it.painter.intrinsicSize
-            imageLoadResult = if (size.width > 1 && size.height > 1) {
+            imageLoadResult = if(size.width > 1 && size.height > 1) {
                 Result.success(it.painter)
             } else {
                 Result.failure(Exception("Invalid image dimensions"))
             }
+        },
+        onError = {
+            it.result.throwable.printStackTrace()
         }
     )
 
@@ -89,17 +91,16 @@ fun BlurredImageBackground(
                     .fillMaxWidth()
                     .background(DarkBlue)
             ) {
-                imageLoadResult?.getOrNull()?.let { painter ->
-                    Image(
-                        painter = painter,
-                        contentDescription = stringResource(Res.string.book_cover),
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .blur(20.dp)
-                    )
-                }
+                Image(
+                    painter = painter,
+                    contentDescription = stringResource(Res.string.book_cover),
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .blur(20.dp)
+                )
             }
+
             Box(
                 modifier = Modifier
                     .weight(0.7f)
@@ -139,7 +140,7 @@ fun BlurredImageBackground(
                 AnimatedContent(
                     targetState = imageLoadResult
                 ) { result ->
-                    when (result) {
+                    when(result) {
                         null -> Box(
                             modifier = Modifier.fillMaxSize(),
                             contentAlignment = Alignment.Center
@@ -152,14 +153,14 @@ fun BlurredImageBackground(
                         else -> {
                             Box {
                                 Image(
-                                    painter = if (result.isSuccess) painter else {
+                                    painter = if(result.isSuccess) painter else {
                                         painterResource(Res.drawable.book_error_2)
                                     },
                                     contentDescription = stringResource(Res.string.book_cover),
                                     modifier = Modifier
                                         .fillMaxSize()
                                         .background(Color.Transparent),
-                                    contentScale = if (result.isSuccess) {
+                                    contentScale = if(result.isSuccess) {
                                         ContentScale.Crop
                                     } else {
                                         ContentScale.Fit
@@ -179,13 +180,13 @@ fun BlurredImageBackground(
                                         )
                                 ) {
                                     Icon(
-                                        imageVector = if (isFavorite) {
+                                        imageVector = if(isFavorite) {
                                             Icons.Filled.Favorite
                                         } else {
                                             Icons.Outlined.FavoriteBorder
                                         },
                                         tint = Color.Red,
-                                        contentDescription = if (isFavorite) {
+                                        contentDescription = if(isFavorite) {
                                             stringResource(Res.string.remove_from_favorites)
                                         } else {
                                             stringResource(Res.string.mark_as_favorite)

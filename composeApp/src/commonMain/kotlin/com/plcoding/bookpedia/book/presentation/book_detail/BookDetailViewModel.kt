@@ -20,10 +20,11 @@ import kotlinx.coroutines.launch
 class BookDetailViewModel(
     private val bookRepository: BookRepository,
     private val savedStateHandle: SavedStateHandle
-) : ViewModel() {
+): ViewModel() {
 
     private val bookId = savedStateHandle.toRoute<Route.BookDetail>().id
-    private val _state = MutableStateFlow(BookDetailsState())
+
+    private val _state = MutableStateFlow(BookDetailState())
     val state = _state
         .onStart {
             fetchBookDescription()
@@ -36,18 +37,15 @@ class BookDetailViewModel(
         )
 
     fun onAction(action: BookDetailAction) {
-        when (action) {
-            is BookDetailAction.onSelectedBoookChange -> {
-                _state.update {
-                    it.copy(
-                        book = action.book
-                    )
-                }
+        when(action) {
+            is BookDetailAction.OnSelectedBookChange -> {
+                _state.update { it.copy(
+                    book = action.book
+                ) }
             }
-
-            is BookDetailAction.onFavoriteClick -> {
+            is BookDetailAction.OnFavoriteClick -> {
                 viewModelScope.launch {
-                    if (state.value.isFavorite) {
+                    if(state.value.isFavorite) {
                         bookRepository.deleteFromFavorites(bookId)
                     } else {
                         state.value.book?.let { book ->
@@ -56,7 +54,6 @@ class BookDetailViewModel(
                     }
                 }
             }
-
             else -> Unit
         }
     }
@@ -77,14 +74,12 @@ class BookDetailViewModel(
             bookRepository
                 .getBookDescription(bookId)
                 .onSuccess { description ->
-                    _state.update {
-                        it.copy(
-                            book = it.book?.copy(
-                                description = description
-                            ),
-                            isLoading = false
-                        )
-                    }
+                    _state.update { it.copy(
+                        book = it.book?.copy(
+                            description = description
+                        ),
+                        isLoading = false
+                    ) }
                 }
         }
     }

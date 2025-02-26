@@ -20,16 +20,16 @@ object BookWorkDtoSerializer: KSerializer<BookWorkDto> {
     override val descriptor: SerialDescriptor = buildClassSerialDescriptor(
         BookWorkDto::class.simpleName!!
     ) {
-      element<String?>("description")
+        element<String?>("description")
     }
 
     override fun deserialize(decoder: Decoder): BookWorkDto = decoder.decodeStructure(descriptor) {
         var description: String? = null
 
-        while (true) {
+        while(true) {
             when(val index = decodeElementIndex(descriptor)) {
                 0 -> {
-                    val jsonDecoder = decoder as JsonDecoder ?: throw SerializationException(
+                    val jsonDecoder = decoder as? JsonDecoder ?: throw SerializationException(
                         "This decoder only works with JSON."
                     )
                     val element = jsonDecoder.decodeJsonElement()
@@ -38,7 +38,7 @@ object BookWorkDtoSerializer: KSerializer<BookWorkDto> {
                             element = element,
                             deserializer = DescriptionDto.serializer()
                         ).value
-                    } else if (element is JsonPrimitive && element.isString) {
+                    } else if(element is JsonPrimitive && element.isString) {
                         element.content
                     } else null
                 }

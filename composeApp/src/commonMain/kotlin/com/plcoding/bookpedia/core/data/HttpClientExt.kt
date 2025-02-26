@@ -1,7 +1,7 @@
 package com.plcoding.bookpedia.core.data
 
 import com.plcoding.bookpedia.core.domain.DataError
-import com.plcoding.bookpedia.core.domain.*
+import com.plcoding.bookpedia.core.domain.Result
 import io.ktor.client.call.NoTransformationFoundException
 import io.ktor.client.call.body
 import io.ktor.client.network.sockets.SocketTimeoutException
@@ -15,9 +15,9 @@ suspend inline fun <reified T> safeCall(
 ): Result<T, DataError.Remote> {
     val response = try {
         execute()
-    } catch (e: SocketTimeoutException) {
+    } catch(e: SocketTimeoutException) {
         return Result.Error(DataError.Remote.REQUEST_TIMEOUT)
-    } catch (e: UnresolvedAddressException) {
+    } catch(e: UnresolvedAddressException) {
         return Result.Error(DataError.Remote.NO_INTERNET)
     } catch (e: Exception) {
         coroutineContext.ensureActive()
@@ -27,7 +27,6 @@ suspend inline fun <reified T> safeCall(
     return responseToResult(response)
 }
 
-
 suspend inline fun <reified T> responseToResult(
     response: HttpResponse
 ): Result<T, DataError.Remote> {
@@ -35,7 +34,7 @@ suspend inline fun <reified T> responseToResult(
         in 200..299 -> {
             try {
                 Result.Success(response.body<T>())
-            } catch (e: NoTransformationFoundException) {
+            } catch(e: NoTransformationFoundException) {
                 Result.Error(DataError.Remote.SERIALIZATION)
             }
         }

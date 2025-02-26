@@ -4,7 +4,7 @@ import com.plcoding.bookpedia.book.data.database.BookEntity
 import com.plcoding.bookpedia.book.data.dto.SearchedBookDto
 import com.plcoding.bookpedia.book.domain.Book
 
-fun SearchedBookDto.toBook() : Book {
+fun SearchedBookDto.toBook(): Book {
     return Book(
         id = id.substringAfterLast("/"),
         title = title,
@@ -20,7 +20,7 @@ fun SearchedBookDto.toBook() : Book {
         averageRating = ratingsAverage,
         ratingCount = ratingsCount,
         numPages = numPagesMedian,
-        numEditions = numEditions ?: 0,
+        numEditions = numEditions ?: 0
     )
 }
 

@@ -11,4 +11,3 @@ data class BookListState(
     val selectedTabIndex: Int = 0,
     val errorMessage: UiText? = null
 )
-

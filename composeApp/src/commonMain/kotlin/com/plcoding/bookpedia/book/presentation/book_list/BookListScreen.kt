@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
@@ -57,7 +56,7 @@ fun BookListScreenRoot(
     BookListScreen(
         state = state,
         onAction = { action ->
-            when (action) {
+            when(action) {
                 is BookListAction.OnBookClick -> onBookClick(action.book)
                 else -> Unit
             }
@@ -65,7 +64,6 @@ fun BookListScreenRoot(
         }
     )
 }
-
 
 @Composable
 fun BookListScreen(
@@ -75,11 +73,11 @@ fun BookListScreen(
     val keyboardController = LocalSoftwareKeyboardController.current
 
     val pagerState = rememberPagerState { 2 }
-    val searchResultsListSate = rememberLazyListState()
-    val favoriteBooksListSate = rememberLazyListState()
+    val searchResultsListState = rememberLazyListState()
+    val favoriteBooksListState = rememberLazyListState()
 
     LaunchedEffect(state.searchResults) {
-        searchResultsListSate.animateScrollToItem(0)
+        searchResultsListState.animateScrollToItem(0)
     }
 
     LaunchedEffect(state.selectedTabIndex) {
@@ -102,7 +100,7 @@ fun BookListScreen(
             onSearchQueryChange = {
                 onAction(BookListAction.OnSearchQueryChange(it))
             },
-            onImageSearch = {
+            onImeSearch = {
                 keyboardController?.hide()
             },
             modifier = Modifier
@@ -145,7 +143,7 @@ fun BookListScreen(
                         },
                         modifier = Modifier.weight(1f),
                         selectedContentColor = SandYellow,
-                        unselectedContentColor = Color.Black.copy(alpha = 0.5F)
+                        unselectedContentColor = Color.Black.copy(alpha = 0.5f)
                     ) {
                         Text(
                             text = stringResource(Res.string.search_results),
@@ -160,7 +158,7 @@ fun BookListScreen(
                         },
                         modifier = Modifier.weight(1f),
                         selectedContentColor = SandYellow,
-                        unselectedContentColor = Color.Black.copy(alpha = 0.5F)
+                        unselectedContentColor = Color.Black.copy(alpha = 0.5f)
                     ) {
                         Text(
                             text = stringResource(Res.string.favorites),
@@ -181,9 +179,9 @@ fun BookListScreen(
                             .fillMaxSize(),
                         contentAlignment = Alignment.Center
                     ) {
-                        when (pageIndex) {
+                        when(pageIndex) {
                             0 -> {
-                                if (state.isLoading) {
+                                if(state.isLoading) {
                                     CircularProgressIndicator()
                                 } else {
                                     when {
@@ -195,7 +193,6 @@ fun BookListScreen(
                                                 color = MaterialTheme.colorScheme.error
                                             )
                                         }
-
                                         state.searchResults.isEmpty() -> {
                                             Text(
                                                 text = stringResource(Res.string.no_search_results),
@@ -204,7 +201,6 @@ fun BookListScreen(
                                                 color = MaterialTheme.colorScheme.error
                                             )
                                         }
-
                                         else -> {
                                             BookList(
                                                 books = state.searchResults,
@@ -212,15 +208,14 @@ fun BookListScreen(
                                                     onAction(BookListAction.OnBookClick(it))
                                                 },
                                                 modifier = Modifier.fillMaxSize(),
-                                                scrollState = searchResultsListSate
+                                                scrollState = searchResultsListState
                                             )
                                         }
                                     }
                                 }
                             }
-
                             1 -> {
-                                if (state.favoriteBooks.isEmpty()) {
+                                if(state.favoriteBooks.isEmpty()) {
                                     Text(
                                         text = stringResource(Res.string.no_favorite_books),
                                         textAlign = TextAlign.Center,
@@ -233,7 +228,7 @@ fun BookListScreen(
                                             onAction(BookListAction.OnBookClick(it))
                                         },
                                         modifier = Modifier.fillMaxSize(),
-                                        scrollState = favoriteBooksListSate
+                                        scrollState = favoriteBooksListState
                                     )
                                 }
                             }

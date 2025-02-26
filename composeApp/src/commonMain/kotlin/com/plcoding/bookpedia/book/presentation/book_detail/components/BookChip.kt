@@ -48,5 +48,4 @@ fun BookChip(
             chipContent()
         }
     }
-
 }

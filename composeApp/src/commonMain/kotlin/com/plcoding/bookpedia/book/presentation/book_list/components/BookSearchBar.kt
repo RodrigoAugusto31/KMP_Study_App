@@ -16,10 +16,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.key
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.key.Key.Companion.R
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import cmp_bookpedia.composeapp.generated.resources.Res
@@ -34,7 +37,7 @@ import org.jetbrains.compose.resources.stringResource
 fun BookSearchBar(
     searchQuery: String,
     onSearchQueryChange: (String) -> Unit,
-    onImageSearch: () -> Unit,
+    onImeSearch: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     CompositionLocalProvider(
@@ -61,13 +64,12 @@ fun BookSearchBar(
                     imageVector = Icons.Default.Search,
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.66f)
-
                 )
             },
             singleLine = true,
             keyboardActions = KeyboardActions(
                 onSearch = {
-                    onImageSearch()
+                    onImeSearch()
                 }
             ),
             keyboardOptions = KeyboardOptions(
@@ -99,5 +101,4 @@ fun BookSearchBar(
                 .minimumInteractiveComponentSize()
         )
     }
-
 }

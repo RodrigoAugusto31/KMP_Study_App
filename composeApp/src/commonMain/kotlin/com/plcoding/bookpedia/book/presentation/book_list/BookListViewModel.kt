@@ -1,15 +1,20 @@
+@file:OptIn(FlowPreview::class)
+
 package com.plcoding.bookpedia.book.presentation.book_list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.plcoding.bookpedia.book.domain.Book
 import com.plcoding.bookpedia.book.domain.BookRepository
 import com.plcoding.bookpedia.core.domain.onError
 import com.plcoding.bookpedia.core.domain.onSuccess
 import com.plcoding.bookpedia.core.presentation.toUiText
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.launchIn
@@ -31,7 +36,7 @@ class BookListViewModel(
     private val _state = MutableStateFlow(BookListState())
     val state = _state
         .onStart {
-            if (cachedBooks.isEmpty()) {
+            if(cachedBooks.isEmpty()) {
                 observeSearchQuery()
             }
             observeFavoriteBooks()
@@ -105,7 +110,6 @@ class BookListViewModel(
                 isLoading = true
             )
         }
-
         bookRepository
             .searchBooks(query)
             .onSuccess { searchResults ->
@@ -127,4 +131,5 @@ class BookListViewModel(
                 }
             }
     }
+
 }

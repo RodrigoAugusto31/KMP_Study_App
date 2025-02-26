@@ -1,6 +1,4 @@
-@file:OptIn(ExperimentalLayoutApi::class, ExperimentalLayoutApi::class,
-    ExperimentalLayoutApi::class
-)
+@file:OptIn(ExperimentalLayoutApi::class)
 
 package com.plcoding.bookpedia.book.presentation.book_detail
 
@@ -13,6 +11,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
@@ -32,7 +31,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cmp_bookpedia.composeapp.generated.resources.Res
-import cmp_bookpedia.composeapp.generated.resources.book_cover
 import cmp_bookpedia.composeapp.generated.resources.description_unavailable
 import cmp_bookpedia.composeapp.generated.resources.languages
 import cmp_bookpedia.composeapp.generated.resources.pages
@@ -57,7 +55,7 @@ fun BookDetailScreenRoot(
         state = state,
         onAction = { action ->
             when(action) {
-                is BookDetailAction.onBackClick -> onBackClick()
+                is BookDetailAction.OnBackClick -> onBackClick()
                 else -> Unit
             }
             viewModel.onAction(action)
@@ -67,21 +65,21 @@ fun BookDetailScreenRoot(
 
 @Composable
 private fun BookDetailScreen(
-    state: BookDetailsState,
+    state: BookDetailState,
     onAction: (BookDetailAction) -> Unit
 ) {
     BlurredImageBackground(
         imageUrl = state.book?.imageUrl,
         isFavorite = state.isFavorite,
         onFavoriteClick = {
-            onAction(BookDetailAction.onFavoriteClick)
+            onAction(BookDetailAction.OnFavoriteClick)
         },
         onBackClick = {
-            onAction(BookDetailAction.onBackClick)
+            onAction(BookDetailAction.OnBackClick)
         },
         modifier = Modifier.fillMaxSize()
     ) {
-        if (state.book != null) {
+        if(state.book != null) {
             Column(
                 modifier = Modifier
                     .widthIn(max = 700.dp)
@@ -110,11 +108,11 @@ private fun BookDetailScreen(
                 ) {
                     state.book.averageRating?.let { rating ->
                         TitledContent(
-                            title = stringResource(Res.string.rating)
+                            title = stringResource(Res.string.rating),
                         ) {
                             BookChip {
                                 Text(
-                                    text = "${round(rating * 10) / 10.0}",
+                                    text = "${round(rating * 10) / 10.0}"
                                 )
                                 Icon(
                                     imageVector = Icons.Default.Star,
@@ -126,17 +124,15 @@ private fun BookDetailScreen(
                     }
                     state.book.numPages?.let { pageCount ->
                         TitledContent(
-                            title = stringResource(Res.string.pages)
+                            title = stringResource(Res.string.pages),
                         ) {
                             BookChip {
-                                Text(
-                                    text = pageCount.toString()
-                                )
+                                Text(text = pageCount.toString())
                             }
                         }
                     }
                 }
-                if (state.book.languages.isNotEmpty()) {
+                if(state.book.languages.isNotEmpty()) {
                     TitledContent(
                         title = stringResource(Res.string.languages),
                         modifier = Modifier
@@ -171,18 +167,25 @@ private fun BookDetailScreen(
                             bottom = 8.dp
                         )
                 )
-                if (state.isLoading) {
+                if(state.isLoading) {
                     CircularProgressIndicator()
+//                    Box(
+//                        modifier = Modifier
+//                            .fillMaxWidth()
+//                            .weight(1f),
+//                        contentAlignment = Alignment.Center
+//                    ) {
+//                    }
                 } else {
                     Text(
-                        text = if (state.book.description.isNullOrBlank()) {
+                        text = if(state.book.description.isNullOrBlank()) {
                             stringResource(Res.string.description_unavailable)
                         } else {
                             state.book.description
                         },
                         style = MaterialTheme.typography.bodyMedium,
                         textAlign = TextAlign.Justify,
-                        color = if (state.book.description.isNullOrBlank()) {
+                        color = if(state.book.description.isNullOrBlank()) {
                             Color.Black.copy(alpha = 0.4f)
                         } else Color.Black,
                         modifier = Modifier
